@@ -1,51 +1,61 @@
-let viagens = []; // cria um array vazio para armazenar viagens ((array segura várias informações em um unico "nome"));
+const promptSync = require("prompt-sync")();
+let nomes = [];
+let enderecos = [];
+let distancias = [];
+let situacoes = [];
+let valores = [];
+let clientes = [];
+let valorestotais = []
+i = 1
+let opcao;
+let nome;
+let endereco;
+let distancia;
+let situacao;
+let valor;
 
-while (true) { // cria -se um loop para que o usuário possa escolher entre as opções do menu, além de poder criar várias viagens com várias informações;
-    let menu = parseFloat(prompt("Bem vindo ao sistema de entregas da Rápido & Seguro Logística, escolha uma opção:\n    1 - Nova Viagem\n    2 - Listar Viagens\n    3 - Sair"));
-    if (menu === 1) {// caso seja desejado uma nova viagem, o usuário fornece informações sobre o cliente para armazenar no array;
-        alert("Nova Viagem");
-        let valor = 10;
-        let nqme = prompt("Qual o nome do cliente?");
-        let endereco = prompt("Qual o endereço do cliente?");
-        let quilometro = parseFloat(prompt("Quantos quilômetros o cliente deseja correr?"));
-        let urg = prompt("O cliente possui urgência?\n    Sim (s)\n    Não (n)"); // caso neessário, o usuário pode escolher se a viagem é urgente ou não, criando duas opções, sim ou não;
-        if (urg == "n") {
-            urg = true;
-            valor = valor * quilometro;
-        } else if (urg == "s") {
-            urg = false;
-            valor = (valor * quilometro) * 0.2; // caso a viagem seja urgente, o valor da viagem terá um acréscimo de 20% no valor final;
+const fs = require("fs");
+const path = require("path");
+fs.writeFileSync("listagem completa.txt", "", "utf8");
+do {
+    do{
+    
+        let nome = promptSync(`Digite o nome do clinte ${i}: `);
+        let endereco = promptSync(`Digite o endereço do cliente ${i}: `);
+        let distancia = promptSync(`Digite a distancia ${i}: `);
+        let situacao = promptSync(`Digite a situação do cliente. 1. normal. 2. Urgente (Escreva o número 1 ou 2): `);
+        let valor = promptSync(`Digite o valor da viagem ${i} por km em reais: `);
+        if ((!isNaN(nome)) || !isNaN(endereco) || isNaN(distancia) || isNaN(situacao) || isNaN(valor)) {
+            console.log("INFORMAÇÕES INCORRETAS. TENTE NOVAMENTE");
         }
+    } while ((!isNaN(nome)) || !isNaN(endereco) || isNaN(distancia) || isNaN(situacao) || isNaN(valor));
 
-        let cliente = {// criado um objeto com as informações do cliente, deixando a informação final da lista mais organizada;
-            nome: nqme,
-            endereco: endereco,
-            distancia: quilometro + " km",
-            urgencia: urg ? "Sim" : "Não",
-            valor: valor
-        };
-
-        viagens.push(cliente);// aqui é feito um push no array viagens, colocando a informação do cliente no array;
-    } else if (menu === 2) {// if feito para listar todos os objetos no array viagens, mostrando as informações passadas pelos clientes;
-        if (viagens.length === 0) {
-            alert("Nenhuma viagem registrada.");// caso ainda não tenha uma viagem registrada, o sistema mostrará uma mensagem de erro ao usuário, mostrando que não há viagens registradas no momento;
-        } else {
-            let lista = "Lista de Viagens:\n";
-            viagens.forEach((viagem, index) => {// aqui é feito um forEach "para cada" viagem aramzenada no array viagens, mostrando as informações do cliente;
-                lista += `\nViagem ${index + 1}:\n`;
-                lista += `Nome do cliente: ${viagem.nome}\n`;
-                lista += `Endereço: ${viagem.endereco}\n`;
-                lista += `Distância: ${viagem.distancia}\n`;
-                lista += `Urgência: ${viagem.urgencia}\n`;
-                lista += `Valor: R$ ${viagem.valor.toFixed(2)}\n`;
-            });
-            alert(lista);// informações do clientes saõ mostradas pelo alert;
-            console.log(lista);// informações do clientes saõ mostradas pelo console;
-        }
-    } else if (menu === 3) {// no caso de não haver mias necessidade do sistema, o usuário sai do sistema com a opção 3;
-        alert("Saindo...");
-        break;
-    } else {
-        alert("Opção inválida"); // caso o usuário digite uma opção que não esteja entre 1 a 3, o sistema mostrará uma mensagem de erro;
+    if (situacao == 1) {
+        situacao = "normal";
+        valortotal = valor * distancia;
+    } else if (situacao == 2) {
+        situacao = "urgente";
+        valortotal = valor + 0.2*valor;
     }
-}
+
+    nomes[i] = nome;
+    enderecos[i] = endereco;
+    distancias[i] = distancia;
+    situacoes[i] = situacao;
+    valores[i] = valor;
+    valorestotais[i] = valortotal;
+    cliente = console.log(`nome: ${nomes[i]}\n endereço: = ${enderecos[i]}\n distancia ${distancias[i]} \n situação : ${situacoes[i]}\n valor total : ${valorestotais[i].toFixed(2)} \n valor por km ${valores[i].toFixed(2)} `)
+    opcao = promptSync(`Cliente registrado, caso deseja continuar tecle enter, caso não digite "n": `)
+    cliente = clientes[i];
+    if (opcao == "n") {
+        console.log("saindo...")
+
+    }
+
+    let textoporlinha = `nome: ${nomes[i]}\n endereço: = ${enderecos[i]}\n distancia ${distancias[i]} \n situação : ${situacoes[i]}\n valor total : ${valorestotais[i].toFixed(2)} \n valor por km ${valores[i].toFixed(2)}`;
+    fs.appendFileSync("listagem completa.txt", textoporlinha, "utf8");
+    fs.appendFileSync("listagem completa.txt", "\n\n", "utf8")
+
+    i++;
+} while (opcao !== "n");
+console.log("arquivo feito com a listagem completa")
